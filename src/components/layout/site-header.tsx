@@ -1,4 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { AuthRequiredPrompt } from "@/components/auth/auth-required-prompt";
 
 const navigationLinks = [
   { href: "/properties", label: "Find a home" },
@@ -26,6 +31,44 @@ function HeartIcon() {
 }
 
 export function SiteHeader() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const router = useRouter();
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const isAuthenticated = false;
+
+  useEffect(() => {
+    function handleOutsidePointer(event: PointerEvent) {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsMenuOpen(false);
+    }
+
+    document.addEventListener("pointerdown", handleOutsidePointer);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsidePointer);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  function closeMenu() {
+    setIsMenuOpen(false);
+  }
+
+  function handleSavedHomes() {
+    closeMenu();
+    if (isAuthenticated) {
+      router.push("/dashboard/favorites");
+      return;
+    }
+    setShowAuthPrompt(true);
+  }
+
   return (
     <header className="bg-page">
       <div className="mx-auto flex min-h-20 w-full max-w-[1440px] items-center justify-between gap-6 px-6 py-4 sm:px-10 lg:px-16">
@@ -50,13 +93,10 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-10 md:flex">
-          <Link
-            href="/dashboard/favorites"
-            className="flex items-center gap-2 text-sm font-medium text-primary-text transition-colors hover:text-secondary-text"
-          >
+          <button type="button" onClick={() => setShowAuthPrompt(true)} className="flex items-center gap-2 text-sm font-medium text-primary-text transition-colors hover:text-secondary-text">
             <HeartIcon />
             Saved homes
-          </Link>
+          </button>
           <Link
             href="/login"
             className="text-sm font-medium text-primary-text transition-colors hover:text-secondary-text"
@@ -71,46 +111,44 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        <details className="relative md:hidden">
-          <summary className="flex cursor-pointer list-none items-center gap-2 rounded-md border border-border px-3 py-2 text-sm font-medium text-primary-text [&::-webkit-details-marker]:hidden">
+        <div ref={mobileMenuRef} className="relative md:hidden">
+          <button type="button" onClick={() => setIsMenuOpen((current) => !current)} aria-expanded={isMenuOpen} aria-controls="mobile-navigation" className="flex cursor-pointer items-center gap-2 rounded-md border border-border px-3 py-2 text-sm font-medium text-primary-text">
             Menu
-            <span aria-hidden="true" className="text-base leading-none">+</span>
-          </summary>
-          <nav
-            aria-label="Mobile navigation"
-            className="absolute right-0 z-10 mt-3 flex w-64 flex-col gap-1 rounded-lg bg-surface p-3 shadow-card"
-          >
+            <span aria-hidden="true" className="text-base leading-none">{isMenuOpen ? "−" : "+"}</span>
+          </button>
+          {isMenuOpen && <nav id="mobile-navigation" aria-label="Mobile navigation" className="absolute right-0 z-10 mt-3 flex w-64 flex-col gap-1 rounded-lg bg-surface p-3 shadow-card">
             {navigationLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={closeMenu}
                 className="rounded-md px-3 py-2.5 text-sm font-medium text-primary-text hover:bg-page"
               >
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/dashboard/favorites"
-              className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-primary-text hover:bg-page"
-            >
+            <button type="button" onClick={handleSavedHomes} className="flex items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm font-medium text-primary-text hover:bg-page">
               <HeartIcon />
               Saved homes
-            </Link>
+            </button>
             <Link
               href="/login"
+              onClick={closeMenu}
               className="rounded-md px-3 py-2.5 text-sm font-medium text-primary-text hover:bg-page"
             >
               Log in
             </Link>
             <Link
               href="/signup"
+              onClick={closeMenu}
               className="mt-2 rounded-pill bg-black px-4 py-3 text-center text-sm font-medium text-white hover:bg-charcoal"
             >
               Sign up
             </Link>
-          </nav>
-        </details>
+          </nav>}
+        </div>
       </div>
+      {showAuthPrompt && <AuthRequiredPrompt onClose={() => setShowAuthPrompt(false)} />}
     </header>
   );
 }

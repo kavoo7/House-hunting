@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SaveButton } from "@/components/favorites/save-button";
 
 export type PropertyCardData = {
   image: string;
@@ -27,13 +28,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
             {property.status}
           </span>
         )}
-        <button
-          type="button"
-          className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-full bg-white p-2.5 shadow-subtle transition-transform hover:scale-105"
-          aria-label={`Save ${property.title}`}
-        >
-          <Image src="/heart.svg" alt="" width={20} height={20} aria-hidden="true" />
-        </button>
+        <SaveButton label={property.title} />
       </div>
 
       <div className="flex flex-col gap-2 p-5">
