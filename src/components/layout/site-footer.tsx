@@ -10,7 +10,7 @@ const footerColumns: { title: string; items: FooterItem[] }[] = [
     title: "Explore",
     items: [
       { label: "Find a home", href: "/properties" },
-      { label: "Neighbourhoods", href: "/#neighbourhoods" },
+      { label: "Neighbourhoods", href: "/neighbourhoods" },
       { label: "Saved homes", href: "/dashboard/favorites" },
     ],
   },

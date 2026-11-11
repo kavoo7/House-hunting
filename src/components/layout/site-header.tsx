@@ -2,8 +2,8 @@ import Link from "next/link";
 
 const navigationLinks = [
   { href: "/properties", label: "Find a home" },
-  { href: "/#neighbourhoods", label: "Neighbourhoods" },
-  { href: "/#how-it-works", label: "How it works" },
+  { href: "/neighbourhoods", label: "Neighbourhoods" },
+  { href: "/how-it-works", label: "How it works" },
 ];
 
 function HeartIcon() {

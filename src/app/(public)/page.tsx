@@ -12,9 +12,11 @@ export default function Home() {
       <HeroSection />
       <SearchPanel />
       <FeaturedHomes />
-      <NeighbourhoodsSection />
-      <HowItWorks />
-      <RentalGuidance />
+      <div className="hidden lg:block">
+        <NeighbourhoodsSection />
+        <HowItWorks />
+        <RentalGuidance />
+      </div>
       <SiteFooter />
     </>
   );
