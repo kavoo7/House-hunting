@@ -57,6 +57,18 @@ export function SiteHeader() {
             <HeartIcon />
             Saved homes
           </Link>
+          <Link
+            href="/login"
+            className="text-sm font-medium text-primary-text transition-colors hover:text-secondary-text"
+          >
+            Log in
+          </Link>
+          <Link
+            href="/signup"
+            className="rounded-pill bg-black px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-charcoal"
+          >
+            Sign up
+          </Link>
         </div>
 
         <details className="relative md:hidden">
@@ -83,6 +95,18 @@ export function SiteHeader() {
             >
               <HeartIcon />
               Saved homes
+            </Link>
+            <Link
+              href="/login"
+              className="rounded-md px-3 py-2.5 text-sm font-medium text-primary-text hover:bg-page"
+            >
+              Log in
+            </Link>
+            <Link
+              href="/signup"
+              className="mt-2 rounded-pill bg-black px-4 py-3 text-center text-sm font-medium text-white hover:bg-charcoal"
+            >
+              Sign up
             </Link>
           </nav>
         </details>

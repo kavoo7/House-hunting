@@ -21,6 +21,7 @@ const neighbourhoods = [
 export function NeighbourhoodsSection() {
   return (
     <section
+      id="neighbourhoods"
       className="bg-[#eee6d8] px-6 py-16 sm:px-10 lg:px-20"
       aria-labelledby="neighbourhoods-heading"
     >

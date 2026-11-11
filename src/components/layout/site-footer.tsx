@@ -2,7 +2,7 @@ import Link from "next/link";
 
 type FooterItem = {
   label: string;
-  href?: string;
+  href: string;
 };
 
 const footerColumns: { title: string; items: FooterItem[] }[] = [
@@ -10,39 +10,29 @@ const footerColumns: { title: string; items: FooterItem[] }[] = [
     title: "Explore",
     items: [
       { label: "Find a home", href: "/properties" },
-      { label: "Neighbourhoods" },
+      { label: "Neighbourhoods", href: "/#neighbourhoods" },
       { label: "Saved homes", href: "/dashboard/favorites" },
     ],
   },
   {
     title: "Resources",
     items: [
-      { label: "Rental guide" },
-      { label: "Safety tips" },
-      { label: "Help centre" },
+      { label: "Rental guide", href: "/guide" },
+      { label: "Safety tips", href: "/guide#before-payment-heading" },
+      { label: "Help centre", href: "/help" },
     ],
   },
   {
     title: "Company",
     items: [
       { label: "About us", href: "/about" },
-      { label: "Contact us" },
+      { label: "Contact us", href: "/contact" },
     ],
   },
 ];
 
 function FooterItemLink({ item }: { item: FooterItem }) {
-  const className = "text-[13px] text-sand transition-colors hover:text-cream";
-
-  if (item.href) {
-    return (
-      <Link href={item.href} className={className}>
-        {item.label}
-      </Link>
-    );
-  }
-
-  return <span className={className}>{item.label}</span>;
+  return <Link href={item.href} className="inline-flex cursor-pointer text-[13px] text-sand transition-colors hover:text-cream focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{item.label}</Link>;
 }
 
 export function SiteFooter() {
@@ -86,8 +76,8 @@ export function SiteFooter() {
         <div className="mt-8 flex flex-col gap-3 border-t border-white/15 pt-6 font-[family-name:var(--font-inter)] text-xs text-sand sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 [APP NAME]. Nairobi, Kenya.</p>
           <div className="flex gap-5">
-            <span>Privacy policy</span>
-            <span>Terms of use</span>
+            <Link href="/privacy" className="inline-flex min-h-8 items-center px-1 text-sand cursor-pointer underline-offset-4 hover:text-cream hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Privacy policy</Link>
+            <Link href="/terms" className="inline-flex min-h-8 items-center px-1 text-sand cursor-pointer underline-offset-4 hover:text-cream hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Terms of use</Link>
           </div>
         </div>
       </div>
