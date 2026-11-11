@@ -32,7 +32,7 @@ export function FeaturedHomes() {
   return (
     <section className="bg-cream px-6 py-16 sm:px-10 lg:px-20" aria-labelledby="featured-homes-heading">
       <div className="mx-auto w-full max-w-[1440px]">
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-5 sm:gap-7">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2
               id="featured-homes-heading"
@@ -42,7 +42,7 @@ export function FeaturedHomes() {
             </h2>
             <Link
               href="/properties"
-              className="flex w-fit items-center gap-3 rounded-lg border border-[#e5ded2] bg-white px-5 py-[13px] font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal transition-colors hover:bg-[#fbfaf7]"
+              className="hidden w-fit items-center gap-3 rounded-lg border border-[#e5ded2] bg-white px-5 py-[13px] font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal transition-colors hover:bg-[#fbfaf7] sm:flex"
               aria-label="Explore all homes"
             >
               Explore all homes
@@ -97,6 +97,15 @@ export function FeaturedHomes() {
               </article>
             ))}
           </div>
+
+          <Link
+            href="/properties"
+            className="flex w-fit items-center gap-3 rounded-lg border border-[#e5ded2] bg-white px-5 py-[13px] font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal transition-colors hover:bg-[#fbfaf7] sm:hidden"
+            aria-label="Explore all homes"
+          >
+            Explore all homes
+            <Image src="/arrow-right.svg" alt="" width={16} height={16} aria-hidden="true" />
+          </Link>
         </div>
       </div>
     </section>
