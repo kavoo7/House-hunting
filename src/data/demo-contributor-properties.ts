@@ -1,4 +1,4 @@
-export type ContributorPropertyStatus = "pending" | "approved" | "rejected" | "draft";
+export type ContributorPropertyStatus = "pending" | "approved" | "rejected" | "changes-requested" | "draft";
 
 export type ContributorProperty = {
   id: string;
@@ -26,6 +26,10 @@ export type ContributorProperty = {
   phone?: string;
   whatsapp?: string;
   rejectionReason?: string;
+  correctionMessage?: string;
+  lastUpdatedOn?: string;
+  reviewHistory?: { action: "approved" | "rejected" | "changes-requested"; administrator: string; date: string; message?: string }[];
+  publicationStatus?: "published" | "unpublished";
   statusHistory?: { status: ContributorPropertyStatus; date: string; reason?: string }[];
 };
 
@@ -40,7 +44,7 @@ export const demoContributorProperties: ContributorProperty[] = [
   { id: "contributor-lavington-01", image: "/featured-home-westlands.png", title: "Sunlit family home near the city", location: "Lavington · near Junction Mall", monthlyRent: 110000, submittedOn: "29 Oct 2026", status: "rejected" },
   { id: "contributor-hurlingham-01", image: "/featured-home-kilimani.png", title: "Calm one-bedroom in a central spot", location: "Hurlingham · near Nairobi Hospital", monthlyRent: 55000, submittedOn: "24 Oct 2026", status: "pending" },
   { id: "contributor-kileleshwa-02", image: "/featured-home-kileleshwa.png", title: "Quiet modern apartment with balcony", location: "Kileleshwa · near Kasuku Centre", monthlyRent: 72000, submittedOn: "18 Oct 2026", status: "approved" },
-].map((property) => ({ ...property, contributorName: "Demo Agent" })) as ContributorProperty[];
+].map((property) => ({ ...property, contributorName: "Demo Agent", publicationStatus: property.status === "approved" ? "published" : "unpublished" })) as ContributorProperty[];
 
 export function readStoredContributorProperties(): ContributorProperty[] {
   if (typeof window === "undefined") return [];
@@ -59,6 +63,11 @@ export function getContributorProperties(contributorName?: string) {
   const name = contributorName || "Demo Agent";
   const deleted = readDeletedContributorPropertyIds();
   return [...readStoredContributorProperties(), ...demoContributorProperties].filter((property) => property.contributorName === name && !deleted.includes(property.id));
+}
+
+export function getAllContributorProperties() {
+  const deleted = readDeletedContributorPropertyIds();
+  return [...readStoredContributorProperties(), ...demoContributorProperties].filter((property) => !deleted.includes(property.id));
 }
 
 export function deleteContributorProperty(propertyId: string) {

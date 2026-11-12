@@ -11,6 +11,7 @@ const statusCopy: Record<ContributorPropertyStatus, { label: string; className: 
   pending: { label: "Pending Review", className: "bg-[#f5ead1] text-[#795d26]" },
   approved: { label: "Approved / Published", className: "bg-[#e3eee3] text-[#35623b]" },
   rejected: { label: "Rejected", className: "bg-[#f5e2df] text-[#8a423b]" },
+  "changes-requested": { label: "Changes Requested", className: "bg-[#e7e1f2] text-[#5c487e]" },
   draft: { label: "Draft", className: "bg-cream text-grey" },
 };
 

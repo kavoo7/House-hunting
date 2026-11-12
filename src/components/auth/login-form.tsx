@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DEMO_ACCOUNTS, useDemoAuth } from "@/components/auth/demo-auth";
+import { getDemoAccountRole, readDemoUsers } from "@/data/demo-users";
 
 function GoogleIcon() {
   return (
@@ -63,7 +64,9 @@ export function LoginForm() {
       setFormMessage("Those demo credentials are not recognised. Choose a Demo Access account or check the details.");
       return;
     }
-    signIn({ name: account.name, email: account.email, role: account.role, active: true });
+    const demoUser = readDemoUsers().find((user) => user.email === account.email);
+    if (demoUser?.status === "suspended") { setFormMessage("This demo account is suspended. Ask an administrator to reactivate it."); return; }
+    signIn({ name: account.name, email: account.email, role: getDemoAccountRole(account.email), active: true });
     router.push(account.destination);
   }
 

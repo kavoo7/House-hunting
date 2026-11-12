@@ -3,18 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { useDemoAuth } from "@/components/auth/demo-auth";
 import { saveContributorProperty } from "@/data/demo-contributor-properties";
+import { readDemoSettings } from "@/data/demo-settings";
 
 type Values = Record<string, string>;
 type Preview = { url: string; file: File };
 const initial: Values = { title: "", type: "", description: "", rent: "", county: "Nairobi", estate: "", street: "", locationDescription: "", bedrooms: "", bathrooms: "", area: "", furnishing: "Unfurnished", parking: "", amenities: "", contactName: "", phone: "", whatsapp: "" };
 const input = "h-12 w-full rounded-md border border-[#e5ded2] bg-white px-3 text-sm text-charcoal outline-none focus:border-charcoal";
-const types = ["Bedsitter", "Studio", "Apartment", "Maisonette", "Townhouse", "Bungalow", "Standalone house", "Other"];
+const defaultTypes = ["Bedsitter", "Studio", "Apartment", "Maisonette", "Townhouse", "Bungalow", "Standalone house", "Other"];
 
 export default function NewContributorPropertyPage() {
-  const router = useRouter(); const { session } = useDemoAuth(); const [v, setV] = useState<Values>(initial); const [errors, setErrors] = useState<Record<string, string>>({}); const [photos, setPhotos] = useState<Preview[]>([]); const [cover, setCover] = useState(0); const [busy, setBusy] = useState(false); const [success, setSuccess] = useState(false);
+  const router = useRouter(); const { session } = useDemoAuth(); const [v, setV] = useState<Values>(initial); const [availableTypes, setAvailableTypes] = useState(defaultTypes); const types = availableTypes; const [errors, setErrors] = useState<Record<string, string>>({}); const [photos, setPhotos] = useState<Preview[]>([]); const [cover, setCover] = useState(0); const [busy, setBusy] = useState(false); const [success, setSuccess] = useState(false);
+  useEffect(() => { const frame = window.requestAnimationFrame(() => setAvailableTypes(readDemoSettings().propertyTypes.filter((option) => option.active).map((option) => option.label))); return () => window.cancelAnimationFrame(frame); }, []);
   const update = (name: string, value: string) => { setV((old) => ({ ...old, [name]: value })); setErrors((old) => ({ ...old, [name]: "" })); };
   const addPhotos = (event: ChangeEvent<HTMLInputElement>) => { const chosen = Array.from(event.target.files ?? []); const valid = chosen.filter((file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type) && file.size <= 5 * 1024 * 1024); setPhotos((old) => [...old, ...valid.map((file) => ({ file, url: URL.createObjectURL(file) }))].slice(0, 10)); event.target.value = ""; if (valid.length !== chosen.length) setErrors((old) => ({ ...old, photos: "Use JPG, PNG or WebP images up to 5 MB each." })); };
   const removePhoto = (index: number) => { URL.revokeObjectURL(photos[index].url); setPhotos((old) => old.filter((_, i) => i !== index)); setCover((old) => old === index ? 0 : old > index ? old - 1 : old); };

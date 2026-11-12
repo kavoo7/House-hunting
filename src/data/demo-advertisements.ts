@@ -1,0 +1,14 @@
+export type AdvertisementStatus = "active" | "scheduled" | "paused" | "expired";
+export type AdvertisementCategory = "Moving and relocation services" | "Internet service providers" | "Furniture and home supplies" | "Cleaning services" | "Home improvement" | "Other";
+export type AdvertisementPlacement = "Homepage" | "Property search" | "Rental guide";
+export type DemoAdvertisement = { id: string; businessName: string; title: string; description: string; category: AdvertisementCategory; placement: AdvertisementPlacement; destinationUrl: string; creative: string; startDate: string; endDate: string; status: AdvertisementStatus; createdOn: string; updatedOn?: string };
+export const DEMO_ADVERTISEMENTS_KEY = "house-hunting-demo-advertisements";
+export const advertisementCategories: AdvertisementCategory[] = ["Moving and relocation services", "Internet service providers", "Furniture and home supplies", "Cleaning services", "Home improvement", "Other"];
+export const advertisementPlacements: AdvertisementPlacement[] = ["Homepage", "Property search", "Rental guide"];
+export const demoAdvertisements: DemoAdvertisement[] = [
+  { id: "demo-ad-001", businessName: "SwiftMove Nairobi", title: "A smoother move starts here", description: "Reliable moving support for your next Nairobi home.", category: "Moving and relocation services", placement: "Homepage", destinationUrl: "https://example.com/swiftmove", creative: "/hero-property.png", startDate: "2026-10-01", endDate: "2026-12-31", status: "active", createdOn: "2026-09-20" },
+  { id: "demo-ad-002", businessName: "HomeLink Fibre", title: "Stay connected in your new home", description: "Fast, dependable internet for modern city living.", category: "Internet service providers", placement: "Property search", destinationUrl: "https://example.com/homelink", creative: "/featured-home-westlands.png", startDate: "2026-11-20", endDate: "2027-02-28", status: "scheduled", createdOn: "2026-11-01" },
+  { id: "demo-ad-003", businessName: "TidyNest", title: "A fresh start for every room", description: "Thoughtful home cleaning services for busy renters.", category: "Cleaning services", placement: "Rental guide", destinationUrl: "https://example.com/tidynest", creative: "/featured-home-kileleshwa.png", startDate: "2026-09-01", endDate: "2026-11-30", status: "expired", createdOn: "2026-08-15" },
+];
+export function readDemoAdvertisements() { if (typeof window === "undefined") return demoAdvertisements; try { const stored = window.sessionStorage.getItem(DEMO_ADVERTISEMENTS_KEY); return stored ? JSON.parse(stored) as DemoAdvertisement[] : demoAdvertisements; } catch { return demoAdvertisements; } }
+export function saveDemoAdvertisements(advertisements: DemoAdvertisement[]) { window.sessionStorage.setItem(DEMO_ADVERTISEMENTS_KEY, JSON.stringify(advertisements)); }

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PropertyCard, type PropertyCardData } from "@/components/properties/property-card";
 import { SaveButton } from "@/components/favorites/save-button";
+import { ReportPropertyForm } from "@/components/reports/report-property-form";
 
 type PropertyDetails = PropertyCardData & {
   description: string;
@@ -116,6 +117,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ prope
               <p className="mt-3 font-[family-name:var(--font-inter)] text-sm leading-[1.6] text-grey">Send an enquiry to arrange a viewing and learn more about the tenancy terms.</p>
               <button type="button" className="mt-6 h-12 w-full rounded-md bg-black px-5 font-[family-name:var(--font-inter)] text-sm font-medium text-white transition-colors hover:bg-charcoal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Send an enquiry</button>
               <p className="mt-3 text-center font-[family-name:var(--font-inter)] text-xs text-grey">No payment is required to enquire.</p>
+              <ReportPropertyForm propertyId={propertyId} propertyTitle={property.title} />
             </aside>
           </div>
         </section>
