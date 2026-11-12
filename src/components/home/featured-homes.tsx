@@ -4,6 +4,7 @@ import { SaveButton } from "@/components/favorites/save-button";
 
 const homes = [
   {
+    propertyId: "bright-airy-apartment",
     image: "/featured-home-kilimani.png",
     status: "New listing",
     price: "KSh 85,000",
@@ -12,6 +13,7 @@ const homes = [
     details: "2 beds     2 baths     110 m²",
   },
   {
+    propertyId: "modern-westlands-home",
     image: "/featured-home-westlands.png",
     status: "Available now",
     price: "KSh 65,000",
@@ -20,6 +22,7 @@ const homes = [
     details: "2 beds     2 baths     95 m²",
   },
   {
+    propertyId: "peaceful-city-retreat",
     image: "/featured-home-kileleshwa.png",
     status: "Available now",
     price: "KSh 45,000",
@@ -69,7 +72,7 @@ export function FeaturedHomes() {
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     className="object-cover"
                   />
-                  <SaveButton label={home.title} />
+                  <SaveButton label={home.title} propertyId={home.propertyId} />
                 </div>
 
                 <div className="flex flex-col gap-2 p-5">

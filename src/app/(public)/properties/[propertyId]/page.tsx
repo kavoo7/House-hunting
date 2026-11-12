@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PropertyCard, type PropertyCardData } from "@/components/properties/property-card";
+import { SaveButton } from "@/components/favorites/save-button";
 
 type PropertyDetails = PropertyCardData & {
   description: string;
@@ -54,7 +55,8 @@ const properties: Record<string, PropertyDetails> = {
   },
 };
 
-const relatedProperties: PropertyCardData[] = Object.values(properties).map((property) => ({
+const relatedProperties: PropertyCardData[] = Object.entries(properties).map(([propertyId, property]) => ({
+  propertyId,
   image: property.image,
   title: property.title,
   location: property.location,
@@ -84,6 +86,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ prope
           <div className="grid gap-3 lg:grid-cols-[1.55fr_1fr] lg:grid-rows-2 lg:gap-4">
             <div className="relative h-[300px] overflow-hidden rounded-[12px] sm:h-[420px] lg:row-span-2 lg:h-[560px]">
               <Image src={property.gallery[0]} alt={property.title} fill priority sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover" />
+              <SaveButton label={property.title} propertyId={propertyId} />
             </div>
             {property.gallery.slice(1).map((image, index) => (
               <div key={image} className="relative hidden h-[270px] overflow-hidden rounded-[12px] sm:block">

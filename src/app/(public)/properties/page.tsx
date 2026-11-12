@@ -3,12 +3,12 @@ import { PropertyCard, type PropertyCardData } from "@/components/properties/pro
 
 export const instant = false;
 
-type SearchProperty = PropertyCardData & { monthlyRent: number };
+export type SearchProperty = PropertyCardData & { monthlyRent: number };
 
-const properties: SearchProperty[] = [
-  { image: "/featured-home-kilimani.png", status: "New listing", price: "KSh 85,000", monthlyRent: 85000, title: "Bright & airy 2-bedroom apartment", location: "Kilimani · near Yaya Centre", bedrooms: 2, bathrooms: 2, size: "110 m²" },
-  { image: "/featured-home-westlands.png", status: "Available now", price: "KSh 65,000", monthlyRent: 65000, title: "Modern living in Westlands", location: "Westlands · near Sarit Centre", bedrooms: 2, bathrooms: 2, size: "95 m²" },
-  { image: "/featured-home-kileleshwa.png", status: "Available now", price: "KSh 45,000", monthlyRent: 45000, title: "Your own peaceful city retreat", location: "Kileleshwa · Oloitoktok Road", bedrooms: 1, bathrooms: 1, size: "68 m²" },
+export const sampleProperties: SearchProperty[] = [
+  { propertyId: "bright-airy-apartment", image: "/featured-home-kilimani.png", status: "New listing", price: "KSh 85,000", monthlyRent: 85000, title: "Bright & airy 2-bedroom apartment", location: "Kilimani · near Yaya Centre", bedrooms: 2, bathrooms: 2, size: "110 m²" },
+  { propertyId: "modern-westlands-home", image: "/featured-home-westlands.png", status: "Available now", price: "KSh 65,000", monthlyRent: 65000, title: "Modern living in Westlands", location: "Westlands · near Sarit Centre", bedrooms: 2, bathrooms: 2, size: "95 m²" },
+  { propertyId: "peaceful-city-retreat", image: "/featured-home-kileleshwa.png", status: "Available now", price: "KSh 45,000", monthlyRent: 45000, title: "Your own peaceful city retreat", location: "Kileleshwa · Oloitoktok Road", bedrooms: 1, bathrooms: 1, size: "68 m²" },
   { image: "/featured-home-westlands.png", price: "KSh 110,000", monthlyRent: 110000, title: "Sunlit family home near the city", location: "Lavington · near Junction Mall", bedrooms: 3, bathrooms: 2, size: "145 m²" },
   { image: "/featured-home-kilimani.png", price: "KSh 55,000", monthlyRent: 55000, title: "Calm one-bedroom in a central spot", location: "Hurlingham · near Nairobi Hospital", bedrooms: 1, bathrooms: 1, size: "62 m²" },
   { image: "/featured-home-kileleshwa.png", price: "KSh 72,000", monthlyRent: 72000, title: "Quiet modern apartment with balcony", location: "Kileleshwa · near Kasuku Centre", bedrooms: 2, bathrooms: 2, size: "102 m²" },
@@ -50,7 +50,7 @@ export default async function PropertiesPage({
   const sort = firstQueryValue(query.sort) || "recommended";
   const normalizedLocation = location.toLowerCase();
 
-  const filteredProperties = properties
+  const filteredProperties = sampleProperties
     .filter((property) => !normalizedLocation || property.location.toLowerCase().includes(normalizedLocation))
     .filter((property) => matchesRent(property, rent))
     .filter((property) => matchesBedrooms(property, bedrooms));

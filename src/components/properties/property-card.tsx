@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { SaveButton } from "@/components/favorites/save-button";
 
 export type PropertyCardData = {
@@ -10,6 +11,7 @@ export type PropertyCardData = {
   bathrooms: number;
   size: string;
   status?: string;
+  propertyId?: string;
 };
 
 export function PropertyCard({ property }: { property: PropertyCardData }) {
@@ -28,7 +30,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
             {property.status}
           </span>
         )}
-        <SaveButton label={property.title} />
+        <SaveButton label={property.title} propertyId={property.propertyId} />
       </div>
 
       <div className="flex flex-col gap-2 p-5">
@@ -36,7 +38,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
           {property.price} <span className="text-xs font-normal text-grey">/ month</span>
         </p>
         <h2 className="font-[family-name:var(--font-inter)] text-base font-medium leading-snug text-charcoal">
-          {property.title}
+          {property.propertyId ? <Link href={`/properties/${property.propertyId}`} className="hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{property.title}</Link> : property.title}
         </h2>
         <p className="font-[family-name:var(--font-inter)] text-[13px] leading-snug text-grey">
           {property.location}

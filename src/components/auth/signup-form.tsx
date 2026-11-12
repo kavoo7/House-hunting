@@ -109,7 +109,7 @@ export function SignupForm() {
       return;
     }
 
-    signIn({ name: values.fullName.trim(), email: values.email.trim(), role: "user", active: true });
+    signIn({ name: values.fullName.trim(), email: values.email.trim(), phone: values.phone.trim(), role: "user", active: true });
     router.push("/dashboard");
   }
 

@@ -1,18 +1,22 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 export type DemoRole = "user" | "contributor" | "admin";
-export type DemoSession = { name: string; email: string; role: DemoRole; active: true };
+export type DemoSession = { name: string; email: string; phone?: string; role: DemoRole; active: true };
 
 type DemoAuthContextValue = {
   session: DemoSession | null;
   isReady: boolean;
   signIn: (session: DemoSession) => void;
   signOut: () => void;
+  updateProfile: (profile: Pick<DemoSession, "name" | "email" | "phone">) => void;
+  favoritePropertyIds: string[];
+  toggleFavorite: (propertyId: string) => void;
 };
 
 const STORAGE_KEY = "house-hunting-demo-session";
+const FAVORITES_KEY = "house-hunting-demo-favorites";
 const DemoAuthContext = createContext<DemoAuthContextValue | null>(null);
 
 export const DEMO_ACCOUNTS = [
@@ -24,11 +28,15 @@ export const DEMO_ACCOUNTS = [
 export function DemoAuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<DemoSession | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const [favoritePropertyIds, setFavoritePropertyIds] = useState<string[]>([]);
+  const [favoriteNotice, setFavoriteNotice] = useState("");
 
   useEffect(() => {
     try {
       const stored = window.sessionStorage.getItem(STORAGE_KEY);
       if (stored) queueMicrotask(() => setSession(JSON.parse(stored) as DemoSession));
+      const storedFavorites = window.sessionStorage.getItem(FAVORITES_KEY);
+      queueMicrotask(() => setFavoritePropertyIds(storedFavorites ? JSON.parse(storedFavorites) as string[] : ["bright-airy-apartment", "modern-westlands-home", "peaceful-city-retreat"]));
     } catch {
       window.sessionStorage.removeItem(STORAGE_KEY);
     } finally {
@@ -46,8 +54,30 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
     window.sessionStorage.removeItem(STORAGE_KEY);
   }
 
-  const value = useMemo(() => ({ session, isReady, signIn, signOut }), [session, isReady]);
-  return <DemoAuthContext.Provider value={value}>{children}</DemoAuthContext.Provider>;
+  function updateProfile(profile: Pick<DemoSession, "name" | "email" | "phone">) {
+    if (!session) return;
+    const nextSession = { ...session, ...profile };
+    setSession(nextSession);
+    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(nextSession));
+  }
+
+  function toggleFavorite(propertyId: string) {
+    setFavoritePropertyIds((current) => {
+      const next = current.includes(propertyId) ? current.filter((id) => id !== propertyId) : [...current, propertyId];
+      window.sessionStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+      setFavoriteNotice(current.includes(propertyId) ? "Property removed from your saved homes." : "Property added to your saved homes.");
+      return next;
+    });
+  }
+
+  useEffect(() => {
+    if (!favoriteNotice) return;
+    const timeout = window.setTimeout(() => setFavoriteNotice(""), 2800);
+    return () => window.clearTimeout(timeout);
+  }, [favoriteNotice]);
+
+  const value = { session, isReady, signIn, signOut, updateProfile, favoritePropertyIds, toggleFavorite };
+  return <DemoAuthContext.Provider value={value}>{children}{favoriteNotice && <div role="status" aria-live="polite" className="fixed bottom-5 left-1/2 z-[60] -translate-x-1/2 rounded-md bg-charcoal px-4 py-3 text-center text-sm text-white shadow-card">{favoriteNotice}</div>}</DemoAuthContext.Provider>;
 }
 
 export function useDemoAuth() {

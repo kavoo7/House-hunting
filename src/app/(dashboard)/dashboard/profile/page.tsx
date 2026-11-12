@@ -1,0 +1,37 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, type FormEvent } from "react";
+import { roleLabel, useDemoAuth } from "@/components/auth/demo-auth";
+
+export default function ProfilePage() {
+  const router = useRouter();
+  const { session, updateProfile, signOut } = useDemoAuth();
+  const [name, setName] = useState(session?.name ?? "");
+  const [email, setEmail] = useState(session?.email ?? "");
+  const [phone, setPhone] = useState(session?.phone ?? "");
+  const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
+
+  function saveProfile(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const nextErrors: typeof errors = {};
+    if (!name.trim()) nextErrors.name = "Enter your full name.";
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) nextErrors.email = "Enter a valid email address.";
+    if (!/^\+?[0-9\s()-]{7,}$/.test(phone.trim())) nextErrors.phone = "Enter a valid phone number.";
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) { setMessage("Please review the highlighted fields."); return; }
+    updateProfile({ name: name.trim(), email: email.trim(), phone: phone.trim() });
+    setMessage("Your demo profile has been updated for this browser tab.");
+  }
+
+  function cancelChanges() { setName(session?.name ?? ""); setEmail(session?.email ?? ""); setPhone(session?.phone ?? ""); setErrors({}); setMessage(""); }
+  function confirmLogout() { signOut(); router.push("/"); }
+
+  return <main className="min-h-screen bg-cream px-6 py-10 sm:px-10 lg:px-12 lg:py-14"><div className="mx-auto flex w-full max-w-[1000px] flex-col gap-8"><header><Link href="/dashboard" className="text-sm font-medium text-charcoal underline underline-offset-4">← Back to dashboard</Link><p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.08em] text-grey">Account settings</p><h1 className="mt-3 font-[family-name:var(--font-lora)] text-[40px] font-normal leading-tight text-charcoal sm:text-[48px]">Profile &amp; settings.</h1><p className="mt-4 max-w-xl text-base leading-7 text-grey">Keep your demonstration profile details up to date.</p></header><form onSubmit={saveProfile} noValidate className="rounded-[12px] bg-white p-6 shadow-subtle sm:p-8"><section aria-labelledby="profile-information-heading"><h2 id="profile-information-heading" className="font-[family-name:var(--font-lora)] text-[28px] font-normal text-charcoal">Profile information</h2><p className="mt-2 text-sm text-grey">These details are stored only in this browser tab for the frontend demonstration.</p><div className="mt-6 grid gap-5 sm:grid-cols-2"><ProfileField id="profile-name" label="Full name" value={name} onChange={setName} error={errors.name} autoComplete="name" /><ProfileField id="profile-email" label="Email address" type="email" value={email} onChange={setEmail} error={errors.email} autoComplete="email" /><ProfileField id="profile-phone" label="Phone number" type="tel" value={phone} onChange={setPhone} error={errors.phone} autoComplete="tel" /></div></section><section aria-labelledby="account-information-heading" className="mt-8 border-t border-border pt-8"><h2 id="account-information-heading" className="font-[family-name:var(--font-lora)] text-[28px] font-normal text-charcoal">Account information</h2><div className="mt-5 grid gap-4 sm:grid-cols-2"><Info label="Role" value={session ? roleLabel(session.role) : "Registered user"} /><Info label="Account type" value="Frontend demonstration account" /></div><p className="mt-4 text-xs leading-5 text-grey">Your role cannot be changed here. Email updates do not send or verify an email.</p></section><section aria-labelledby="preferences-heading" className="mt-8 border-t border-border pt-8"><h2 id="preferences-heading" className="font-[family-name:var(--font-lora)] text-[28px] font-normal text-charcoal">Account preferences</h2><label className="mt-5 flex items-start gap-3 text-sm text-charcoal"><input type="checkbox" defaultChecked className="mt-0.5 size-4 accent-black" />Keep demo notices visible while using the application</label><p className="mt-2 text-xs text-grey">This interface preference is local to this page and has no email, SMS or push behavior.</p></section><div className="mt-8 border-t border-border pt-6"><div className="flex flex-wrap gap-3"><button type="submit" className="rounded-md bg-black px-5 py-3 text-sm font-medium text-white hover:bg-charcoal">Save changes</button><button type="button" onClick={cancelChanges} className="rounded-md border border-border px-5 py-3 text-sm font-medium text-charcoal hover:bg-cream">Cancel</button></div>{message && <p role="status" className="mt-4 text-sm text-grey">{message}</p>}</div></form><section className="rounded-[12px] border border-border bg-white p-6 shadow-subtle sm:p-8"><h2 className="font-[family-name:var(--font-lora)] text-[28px] font-normal text-charcoal">Account actions</h2><p className="mt-2 text-sm text-grey">End this temporary demonstration session on this browser tab.</p><button type="button" onClick={() => setShowLogoutConfirmation(true)} className="mt-5 rounded-md border border-charcoal px-5 py-3 text-sm font-medium text-charcoal hover:bg-cream">Log out</button></section>{showLogoutConfirmation && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-5" role="presentation" onClick={() => setShowLogoutConfirmation(false)}><section role="dialog" aria-modal="true" aria-labelledby="profile-logout-heading" className="w-full max-w-md rounded-[12px] bg-white p-6 shadow-card" onClick={(event) => event.stopPropagation()}><h2 id="profile-logout-heading" className="font-[family-name:var(--font-lora)] text-[28px] font-normal text-charcoal">Log out of demo mode?</h2><p className="mt-3 text-sm leading-6 text-grey">Your temporary session will end on this browser tab.</p><div className="mt-6 flex gap-3"><button type="button" onClick={() => setShowLogoutConfirmation(false)} className="h-11 flex-1 rounded-md border border-border text-sm font-medium text-charcoal">Cancel</button><button type="button" onClick={confirmLogout} className="h-11 flex-1 rounded-md bg-black text-sm font-medium text-white">Log out</button></div></section></div>}</div></main>;
+}
+
+function ProfileField({ id, label, value, onChange, error, type = "text", autoComplete }: { id: string; label: string; value: string; onChange: (value: string) => void; error?: string; type?: string; autoComplete?: string }) { return <div><label htmlFor={id} className="block text-sm font-medium text-charcoal">{label}</label><input id={id} type={type} value={value} onChange={(event) => onChange(event.target.value)} autoComplete={autoComplete} aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-error` : undefined} className="mt-2 h-12 w-full rounded-md border border-border bg-white px-3 text-sm text-charcoal outline-none focus:border-charcoal" />{error && <p id={`${id}-error`} className="mt-1 text-xs text-red-700">{error}</p>}</div>; }
+function Info({ label, value }: { label: string; value: string }) { return <div className="rounded-md bg-cream p-4"><p className="text-xs text-grey">{label}</p><p className="mt-1 text-sm font-medium text-charcoal">{value}</p></div>; }
