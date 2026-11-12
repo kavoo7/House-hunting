@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDemoAuth } from "@/components/auth/demo-auth";
 
 type FormValues = {
   fullName: string;
@@ -64,6 +66,8 @@ function validate(values: FormValues): FormErrors {
 }
 
 export function SignupForm() {
+  const router = useRouter();
+  const { signIn } = useDemoAuth();
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -105,8 +109,8 @@ export function SignupForm() {
       return;
     }
 
-    setIsVerificationStep(false);
-    setFormMessage("Demo step complete: continue with your account details. No email was verified.");
+    signIn({ name: values.fullName.trim(), email: values.email.trim(), role: "user", active: true });
+    router.push("/dashboard");
   }
 
   function updateValue(field: keyof FormValues, value: string) {

@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { DEMO_ACCOUNTS, useDemoAuth } from "@/components/auth/demo-auth";
 
 function GoogleIcon() {
   return (
@@ -27,12 +29,21 @@ function EyeIcon({ hidden }: { hidden: boolean }) {
 }
 
 export function LoginForm() {
+  const router = useRouter();
+  const { signIn } = useDemoAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [formMessage, setFormMessage] = useState("");
+
+  function selectDemoAccount(account: typeof DEMO_ACCOUNTS[number]) {
+    setEmail(account.email);
+    setPassword(account.password);
+    setErrors({});
+    setFormMessage(`Demo credentials selected for ${account.label}. Click Log in to continue.`);
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -43,11 +54,28 @@ export function LoginForm() {
     if (!password) nextErrors.password = "Enter your password.";
 
     setErrors(nextErrors);
-    setFormMessage(Object.keys(nextErrors).length === 0 ? "Demo only: login is not connected." : "Please review the highlighted fields.");
+    if (Object.keys(nextErrors).length > 0) {
+      setFormMessage("Please review the highlighted fields.");
+      return;
+    }
+    const account = DEMO_ACCOUNTS.find((candidate) => candidate.email === email.trim().toLowerCase() && candidate.password === password);
+    if (!account) {
+      setFormMessage("Those demo credentials are not recognised. Choose a Demo Access account or check the details.");
+      return;
+    }
+    signIn({ name: account.name, email: account.email, role: account.role, active: true });
+    router.push(account.destination);
   }
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5" aria-label="Log in">
+      <aside className="rounded-md border border-[#e5ded2] bg-cream p-4" aria-label="Demo access">
+        <p className="font-[family-name:var(--font-inter)] text-xs font-semibold uppercase tracking-[0.08em] text-charcoal">Demo access</p>
+        <p className="mt-1 text-xs leading-5 text-grey">Frontend demonstration only. Select an account to fill the fields, then click Log in.</p>
+        <div className="mt-3 grid gap-3">
+          {DEMO_ACCOUNTS.map((account) => <button key={account.email} type="button" onClick={() => selectDemoAccount(account)} className="rounded-md border border-[#e5ded2] bg-white px-3 py-3 text-left hover:bg-[#fbfaf7]"><span className="block text-xs font-semibold text-charcoal">{account.label}{account.role === "admin" && " · Project owner review"}</span><span className="mt-1 block break-all font-mono text-[11px] text-grey">{account.email}</span><span className="mt-1 block font-mono text-[11px] text-grey">{account.password}</span></button>)}
+        </div>
+      </aside>
       <button type="button" className="flex h-12 w-full items-center justify-center gap-3 rounded-md border border-[#e5ded2] bg-white font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal hover:bg-[#fbfaf7]">
         <GoogleIcon />
         Continue with Google

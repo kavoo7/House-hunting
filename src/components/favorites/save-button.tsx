@@ -3,13 +3,15 @@
 import Image from "next/image";
 import { useState } from "react";
 import { AuthRequiredPrompt } from "@/components/auth/auth-required-prompt";
+import { useDemoAuth } from "@/components/auth/demo-auth";
 
-export function SaveButton({ label, isAuthenticated = false }: { label: string; isAuthenticated?: boolean }) {
+export function SaveButton({ label }: { label: string }) {
+  const { session } = useDemoAuth();
   const [isSaved, setIsSaved] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
 
   function handleClick() {
-    if (!isAuthenticated) {
+    if (!session || session.role !== "user") {
       setShowPrompt(true);
       return;
     }
