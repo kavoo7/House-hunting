@@ -4,7 +4,6 @@ import { HowItWorks } from "@/components/home/how-it-works";
 import { NeighbourhoodsSection } from "@/components/home/neighbourhoods-section";
 import { RentalGuidance } from "@/components/home/rental-guidance";
 import { SearchPanel } from "@/components/home/search-panel";
-import { SiteFooter } from "@/components/layout/site-footer";
 
 export default function Home() {
   return (
@@ -17,7 +16,6 @@ export default function Home() {
         <HowItWorks />
         <RentalGuidance />
       </div>
-      <SiteFooter />
     </>
   );
 }

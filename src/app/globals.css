@@ -7,6 +7,9 @@
   --palette-black: #111111;
   --palette-white: #ffffff;
   --palette-grey: #777777;
+  --palette-success: #16a34a;
+  --palette-danger: #b42318;
+  --palette-warning: #b7791f;
 
   --background: var(--palette-cream);
   --foreground: var(--palette-charcoal);
@@ -24,6 +27,9 @@
   --color-black: var(--palette-black);
   --color-white: var(--palette-white);
   --color-grey: var(--palette-grey);
+  --color-success: var(--palette-success);
+  --color-danger: var(--palette-danger);
+  --color-warning: var(--palette-warning);
 
   --color-page: var(--background);
   --color-surface: var(--surface);
@@ -103,4 +109,47 @@
     outline: 2px solid var(--accent);
     outline-offset: 3px;
   }
+}
+
+@layer components {
+  .button-primary,
+  .button-secondary,
+  .button-ghost,
+  .button-success,
+  .button-destructive,
+  .button-warning {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.625rem;
+    padding: 0.75rem 1.25rem;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    text-align: center;
+    transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease, opacity 150ms ease;
+  }
+  .button-primary { background: var(--palette-charcoal); color: white; }
+  .button-primary:hover { background: #111111; }
+  .button-secondary { border: 1px solid var(--palette-sand); background: var(--palette-white); color: var(--palette-charcoal); }
+  .button-secondary:hover { background: var(--palette-cream); }
+  .button-ghost { background: transparent; color: var(--palette-charcoal); }
+  .button-ghost:hover { background: var(--palette-cream); }
+  .button-success { background: var(--palette-success); color: white; }
+  .button-success:hover { background: #15803d; }
+  .button-destructive { background: var(--palette-danger); color: white; }
+  .button-destructive:hover { background: #8f1d14; }
+  .button-warning { background: var(--palette-warning); color: white; }
+  .button-warning:hover { background: #975d17; }
+  .button-sm { min-height: 2.25rem; padding: 0.5rem 0.875rem; font-size: 0.75rem; }
+  .button-lg { min-height: 3rem; padding: 0.875rem 1.5rem; }
+  .button-primary:active, .button-secondary:active, .button-ghost:active, .button-success:active, .button-destructive:active, .button-warning:active { transform: translateY(1px); }
+  .button-primary:focus-visible, .button-secondary:focus-visible, .button-ghost:focus-visible, .button-success:focus-visible, .button-destructive:focus-visible, .button-warning:focus-visible { outline: 2px solid var(--palette-sand); outline-offset: 3px; }
+  .button-primary:disabled, .button-secondary:disabled, .button-ghost:disabled, .button-success:disabled, .button-destructive:disabled, .button-warning:disabled { cursor: not-allowed; opacity: 0.5; transform: none; }
+  .button-spinner { height: 0.9rem; width: 0.9rem; animation: button-spin 700ms linear infinite; border: 2px solid currentColor; border-right-color: transparent; border-radius: 9999px; }
+  @keyframes button-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .button-primary, .button-secondary, .button-ghost, .button-success, .button-destructive, .button-warning { transition: none; } .button-spinner { animation: none; } }
 }

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export function RentalGuidance() {
   return (
@@ -16,8 +17,8 @@ export function RentalGuidance() {
           </p>
         </div>
 
-        <button
-          type="button"
+        <Link
+          href="/guide"
           className="flex w-fit shrink-0 items-center gap-3 rounded-lg bg-black px-5 py-[13px] font-[family-name:var(--font-inter)] text-sm font-medium text-white transition-colors hover:bg-charcoal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           aria-label="Read our rental guide"
         >
@@ -29,7 +30,7 @@ export function RentalGuidance() {
             height={20}
             aria-hidden="true"
           />
-        </button>
+        </Link>
       </div>
     </section>
   );

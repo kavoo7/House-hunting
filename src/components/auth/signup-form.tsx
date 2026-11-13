@@ -110,7 +110,7 @@ export function SignupForm() {
     }
 
     signIn({ name: values.fullName.trim(), email: values.email.trim(), phone: values.phone.trim(), role: "user", active: true });
-    router.push("/dashboard");
+    router.replace("/dashboard");
   }
 
   function updateValue(field: keyof FormValues, value: string) {
@@ -156,7 +156,7 @@ export function SignupForm() {
       )}
 
       {!isVerificationStep && <form onSubmit={handleSubmit} noValidate className="space-y-5" aria-label="Create your account">
-        <button type="button" className="flex h-12 w-full items-center justify-center gap-3 rounded-md border border-[#e5ded2] bg-white font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal hover:bg-[#fbfaf7]">
+        <button type="button" onClick={() => setFormMessage("Google sign-in is not available in this demo yet.")} className="flex h-12 w-full items-center justify-center gap-3 rounded-md border border-[#e5ded2] bg-white font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal hover:bg-[#fbfaf7]">
           <GoogleIcon />
           Continue with Google
         </button>

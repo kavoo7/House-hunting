@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const neighbourhoods = [
   {
@@ -33,8 +34,8 @@ export function NeighbourhoodsSection() {
           >
             Find your kind of Nairobi.
           </h2>
-          <button
-            type="button"
+          <Link
+            href="/neighbourhoods"
             className="flex w-fit items-center gap-3 rounded-lg border border-[#e5ded2] bg-white px-5 py-[13px] font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal transition-colors hover:bg-[#fbfaf7]"
             aria-label="Explore neighbourhoods"
           >
@@ -46,7 +47,7 @@ export function NeighbourhoodsSection() {
               height={16}
               aria-hidden="true"
             />
-          </button>
+          </Link>
         </div>
 
         <p className="font-[family-name:var(--font-inter)] text-[15px] font-normal text-grey">

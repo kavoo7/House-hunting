@@ -3,6 +3,7 @@ import { DEMO_ACCOUNTS, type DemoRole } from "@/components/auth/demo-auth";
 export type DemoAccountStatus = "active" | "suspended";
 export type DemoUser = { id: string; name: string; email: string; phone?: string; role: DemoRole; status: DemoAccountStatus; suspensionReason?: string };
 export const DEMO_USER_STATUS_KEY = "house-hunting-demo-user-statuses";
+export const DELETED_DEMO_ACCOUNTS_KEY = "house-hunting-demo-deleted-accounts";
 
 export const demoUsers: DemoUser[] = DEMO_ACCOUNTS.map((account) => ({ id: account.email, name: account.name, email: account.email, phone: undefined, role: account.role, status: "active" }));
 
@@ -30,6 +31,14 @@ export function getDemoAccountRole(userId: string) {
 export function updateDemoAccountRole(userId: string, role: DemoRole) {
   const roles = readDemoUserRoles(); roles[userId] = role;
   window.sessionStorage.setItem("house-hunting-demo-user-roles", JSON.stringify(roles));
+}
+
+export function isDemoAccountDeleted(userId: string) {
+  try { const stored = window.sessionStorage.getItem(DELETED_DEMO_ACCOUNTS_KEY); return stored ? (JSON.parse(stored) as string[]).includes(userId) : false; } catch { return false; }
+}
+
+export function deleteDemoAccount(userId: string) {
+  try { const stored = window.sessionStorage.getItem(DELETED_DEMO_ACCOUNTS_KEY); const deleted = stored ? JSON.parse(stored) as string[] : []; window.sessionStorage.setItem(DELETED_DEMO_ACCOUNTS_KEY, JSON.stringify([...new Set([...deleted, userId])])); } catch { /* Demo storage may be unavailable. */ }
 }
 
 function readDemoUserRoles(): Record<string, DemoRole> {

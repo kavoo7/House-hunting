@@ -3,7 +3,8 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DEMO_ACCOUNTS, useDemoAuth } from "@/components/auth/demo-auth";
-import { getDemoAccountRole, readDemoUsers } from "@/data/demo-users";
+import { getDemoAccountRole, isDemoAccountDeleted, readDemoUsers } from "@/data/demo-users";
+import { Button } from "@/components/ui/button";
 
 function GoogleIcon() {
   return (
@@ -64,10 +65,11 @@ export function LoginForm() {
       setFormMessage("Those demo credentials are not recognised. Choose a Demo Access account or check the details.");
       return;
     }
+    if (isDemoAccountDeleted(account.email)) { setFormMessage("This demo account was deleted in this browser. Choose another demo profile."); return; }
     const demoUser = readDemoUsers().find((user) => user.email === account.email);
     if (demoUser?.status === "suspended") { setFormMessage("This demo account is suspended. Ask an administrator to reactivate it."); return; }
     signIn({ name: account.name, email: account.email, role: getDemoAccountRole(account.email), active: true });
-    router.push(account.destination);
+    router.replace(account.destination);
   }
 
   return (
@@ -79,7 +81,7 @@ export function LoginForm() {
           {DEMO_ACCOUNTS.map((account) => <button key={account.email} type="button" onClick={() => selectDemoAccount(account)} className="rounded-md border border-[#e5ded2] bg-white px-3 py-3 text-left hover:bg-[#fbfaf7]"><span className="block text-xs font-semibold text-charcoal">{account.label}{account.role === "admin" && " · Project owner review"}</span><span className="mt-1 block break-all font-mono text-[11px] text-grey">{account.email}</span><span className="mt-1 block font-mono text-[11px] text-grey">{account.password}</span></button>)}
         </div>
       </aside>
-      <button type="button" className="flex h-12 w-full items-center justify-center gap-3 rounded-md border border-[#e5ded2] bg-white font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal hover:bg-[#fbfaf7]">
+      <button type="button" onClick={() => setFormMessage("Google sign-in is not available in this demo yet.")} className="flex h-12 w-full items-center justify-center gap-3 rounded-md border border-[#e5ded2] bg-white font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal hover:bg-[#fbfaf7]">
         <GoogleIcon />
         Continue with Google
       </button>
@@ -105,7 +107,7 @@ export function LoginForm() {
         <a href="/reset-password" className="font-[family-name:var(--font-inter)] text-sm text-charcoal underline underline-offset-4">Forgot password?</a>
       </div>
 
-      <button type="submit" className="h-12 w-full rounded-md bg-black px-5 font-[family-name:var(--font-inter)] text-sm font-medium text-white hover:bg-charcoal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Log in</button>
+      <Button type="submit" size="lg" className="w-full">Log in</Button>
       {formMessage && <p role="status" className="text-sm text-grey">{formMessage}</p>}
     </form>
   );

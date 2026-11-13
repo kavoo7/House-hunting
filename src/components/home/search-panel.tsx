@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 const neighbourhoods = ["Kilimani", "Westlands", "Kileleshwa", "Lavington", "Hurlingham", "Karen", "Runda"];
 const rentRanges = [
@@ -80,10 +81,10 @@ export function SearchPanel() {
           </div>
         </div>
 
-        <button type="submit" className="flex h-12 shrink-0 items-center justify-center gap-3 rounded-pill bg-black px-7 font-[family-name:var(--font-inter)] text-sm font-medium text-white transition-colors hover:bg-charcoal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" aria-label="Search homes">
+        <Button type="submit" size="lg" className="rounded-pill" aria-label="Search homes">
           <SearchIcon />
           Search homes
-        </button>
+        </Button>
       </form>
     </section>
   );
