@@ -1,18 +1,8 @@
-import Link from "next/link";
-import { PropertyCard, type PropertyCardData } from "@/components/properties/property-card";
+
+import { PropertySearchResults } from "@/components/properties/property-search-results";
 
 export const instant = false;
 
-export type SearchProperty = PropertyCardData & { monthlyRent: number };
-
-export const sampleProperties: SearchProperty[] = [
-  { propertyId: "bright-airy-apartment", image: "/featured-home-kilimani.png", status: "New listing", price: "KSh 85,000", monthlyRent: 85000, title: "Bright & airy 2-bedroom apartment", location: "Kilimani · near Yaya Centre", bedrooms: 2, bathrooms: 2, size: "110 m²" },
-  { propertyId: "modern-westlands-home", image: "/featured-home-westlands.png", status: "Available now", price: "KSh 65,000", monthlyRent: 65000, title: "Modern living in Westlands", location: "Westlands · near Sarit Centre", bedrooms: 2, bathrooms: 2, size: "95 m²" },
-  { propertyId: "peaceful-city-retreat", image: "/featured-home-kileleshwa.png", status: "Available now", price: "KSh 45,000", monthlyRent: 45000, title: "Your own peaceful city retreat", location: "Kileleshwa · Oloitoktok Road", bedrooms: 1, bathrooms: 1, size: "68 m²" },
-  { image: "/featured-home-westlands.png", price: "KSh 110,000", monthlyRent: 110000, title: "Sunlit family home near the city", location: "Lavington · near Junction Mall", bedrooms: 3, bathrooms: 2, size: "145 m²" },
-  { image: "/featured-home-kilimani.png", price: "KSh 55,000", monthlyRent: 55000, title: "Calm one-bedroom in a central spot", location: "Hurlingham · near Nairobi Hospital", bedrooms: 1, bathrooms: 1, size: "62 m²" },
-  { image: "/featured-home-kileleshwa.png", price: "KSh 72,000", monthlyRent: 72000, title: "Quiet modern apartment with balcony", location: "Kileleshwa · near Kasuku Centre", bedrooms: 2, bathrooms: 2, size: "102 m²" },
-];
 
 const neighbourhoods = ["Kilimani", "Westlands", "Kileleshwa", "Lavington", "Hurlingham", "Karen", "Runda"];
 const rentRanges = [
@@ -23,19 +13,6 @@ const rentRanges = [
 
 function firstQueryValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
-}
-
-function matchesRent(property: SearchProperty, rent: string) {
-  if (rent === "under-60000") return property.monthlyRent < 60000;
-  if (rent === "60000-100000") return property.monthlyRent >= 60000 && property.monthlyRent <= 100000;
-  if (rent === "over-100000") return property.monthlyRent > 100000;
-  return true;
-}
-
-function matchesBedrooms(property: SearchProperty, bedrooms: string) {
-  if (!bedrooms) return true;
-  if (bedrooms === "4+") return property.bedrooms >= 4;
-  return property.bedrooms === Number(bedrooms);
 }
 
 export default async function PropertiesPage({
@@ -50,13 +27,7 @@ export default async function PropertiesPage({
   const sort = firstQueryValue(query.sort) || "recommended";
   const normalizedLocation = location.toLowerCase();
 
-  const filteredProperties = sampleProperties
-    .filter((property) => !normalizedLocation || property.location.toLowerCase().includes(normalizedLocation))
-    .filter((property) => matchesRent(property, rent))
-    .filter((property) => matchesBedrooms(property, bedrooms));
 
-  if (sort === "price-low") filteredProperties.sort((a, b) => a.monthlyRent - b.monthlyRent);
-  if (sort === "price-high") filteredProperties.sort((a, b) => b.monthlyRent - a.monthlyRent);
 
   return (
     <main className="bg-cream px-6 py-12 sm:px-10 lg:px-20 lg:py-16">
@@ -90,14 +61,14 @@ export default async function PropertiesPage({
 
         <section aria-labelledby="property-results-heading">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div><h2 id="property-results-heading" className="font-[family-name:var(--font-lora)] text-[30px] font-normal text-charcoal">Rental homes in Nairobi</h2><p className="mt-2 font-[family-name:var(--font-inter)] text-sm text-grey">{filteredProperties.length} sample {filteredProperties.length === 1 ? "property" : "properties"} found</p></div>
+            <div><h2 id="property-results-heading" className="font-[family-name:var(--font-lora)] text-[30px] font-normal text-charcoal">Rental homes in Nairobi</h2></div>
             <form action="/properties" method="get" className="flex items-center gap-3 font-[family-name:var(--font-inter)] text-sm text-grey">
               <input type="hidden" name="location" value={location} /><input type="hidden" name="rent" value={rent} /><input type="hidden" name="bedrooms" value={bedrooms} /><input type="hidden" name="type" value={firstQueryValue(query.type)} />
               <label htmlFor="sort">Sort by</label><select id="sort" name="sort" defaultValue={sort} className="rounded-md border border-[#e5ded2] bg-white px-3 py-2 text-sm text-charcoal"><option value="recommended">Recommended</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select><button type="submit" className="rounded-md border border-[#e5ded2] bg-white px-3 py-2 text-sm font-medium text-charcoal hover:bg-[#fbfaf7]">Apply</button>
             </form>
           </div>
+          <PropertySearchResults location={normalizedLocation} rent={rent} bedrooms={bedrooms} sort={sort} type={firstQueryValue(query.type)} />
 
-          {filteredProperties.length > 0 ? <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{filteredProperties.map((property) => <PropertyCard key={property.title} property={property} />)}</div> : <div className="mt-7 rounded-[12px] bg-white p-10 text-center shadow-subtle"><h3 className="font-[family-name:var(--font-lora)] text-[28px] font-normal text-charcoal">No homes match those filters.</h3><p className="mx-auto mt-3 max-w-md font-[family-name:var(--font-inter)] text-sm leading-[1.6] text-grey">Try a different neighbourhood, rent range or bedroom count to see more sample listings.</p><Link href="/properties" className="mt-6 inline-flex rounded-md bg-black px-5 py-3 font-[family-name:var(--font-inter)] text-sm font-medium text-white hover:bg-charcoal">Clear all filters</Link></div>}
 
           <nav className="mt-10 flex items-center justify-center gap-2" aria-label="Property results pages"><span className="flex size-10 items-center justify-center rounded-md bg-black font-[family-name:var(--font-inter)] text-sm text-white" aria-current="page">1</span><span className="px-2 font-[family-name:var(--font-inter)] text-sm text-grey">of 1</span></nav>
         </section>

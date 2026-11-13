@@ -1,38 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { SaveButton } from "@/components/favorites/save-button";
+import { useEffect, useState } from "react";
+import { getPublishedContributorProperties } from "@/data/demo-contributor-properties";
 
-const homes = [
-  {
-    propertyId: "bright-airy-apartment",
-    image: "/featured-home-kilimani.png",
-    status: "New listing",
-    price: "KSh 85,000",
-    title: "Bright & airy 2-bedroom apartment",
-    location: "Kilimani · near Yaya Centre",
-    details: "2 beds     2 baths     110 m²",
-  },
-  {
-    propertyId: "modern-westlands-home",
-    image: "/featured-home-westlands.png",
-    status: "Available now",
-    price: "KSh 65,000",
-    title: "Modern living in Westlands",
-    location: "Westlands · near Sarit Centre",
-    details: "2 beds     2 baths     95 m²",
-  },
-  {
-    propertyId: "peaceful-city-retreat",
-    image: "/featured-home-kileleshwa.png",
-    status: "Available now",
-    price: "KSh 45,000",
-    title: "Your own peaceful city retreat",
-    location: "Kileleshwa · Oloitoktok Road",
-    details: "1 bed     1 bath     68 m²",
-  },
-];
+type FeaturedHome = { propertyId?: string; image: string; status: string; price: string; title: string; location: string; details: string };
+
 
 export function FeaturedHomes() {
+  const [homes, setHomes] = useState<FeaturedHome[]>([]);
+  useEffect(() => { const frame = requestAnimationFrame(() => setHomes(getPublishedContributorProperties().slice(0, 3).map((property) => ({ propertyId: property.publicPropertyId, image: property.image, status: property.availability || "Available now", price: `KSh ${property.monthlyRent.toLocaleString("en-KE")}`, title: property.title, location: property.location, details: `${property.bedrooms ?? 0} beds     ${property.bathrooms ?? 0} baths     ${property.area ? `${property.area} m²` : "Area not specified"}` })))); return () => cancelAnimationFrame(frame); }, []);
   return (
     <section className="bg-cream px-6 py-16 sm:px-10 lg:px-20" aria-labelledby="featured-homes-heading">
       <div className="mx-auto w-full max-w-[1440px]">

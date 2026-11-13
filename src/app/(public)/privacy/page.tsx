@@ -38,7 +38,7 @@ const sections = [
     title: "Your requests",
     paragraphs: [
       "You may ask about the personal information associated with your account, request corrections, or ask for information to be deleted where appropriate. We may need to confirm your identity before acting on a request.",
-      "For privacy questions or requests, use the privacy or support contact channel made available in the platform. No dedicated contact details have been established in this initial draft.",
+      "For privacy questions or requests, check the Contact Us page for platform support channels currently configured. This draft does not specify a separate privacy contact.",
     ],
   },
 ];

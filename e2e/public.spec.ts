@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const publicRoutes = [
-  "/", "/properties", "/properties/bright-airy-apartment", "/properties/modern-westlands-home",
+  "/", "/properties", "/properties/modern-westlands-home", "/properties/quiet-modern-apartment",
   "/properties/peaceful-city-retreat", "/about", "/guide", "/neighbourhoods",
   "/how-it-works", "/privacy", "/terms", "/contact", "/help", "/login", "/signup", "/reset-password",
 ];
@@ -26,9 +26,10 @@ test("homepage calls to action navigate to their destinations", async ({ page })
   await expect(page).toHaveURL(/\/guide$/);
   await page.goto("/contact");
   await expect(page.getByRole("heading", { name: /help you find your way/ })).toBeVisible();
-  await expect(page.getByText(/support channel will be made available/i)).toBeVisible();
-  await page.goto("/properties/bright-airy-apartment");
+  await expect(page.getByText(/channels without configured details are identified as unavailable/i)).toBeVisible();
+  await page.goto("/properties/modern-westlands-home");
   await expect(page.getByRole("heading", { name: "Interested in this home?" })).toBeVisible();
+  await expect(page.getByText("Representative contact details are not available for this listing.")).toBeVisible();
   await expect(page.getByRole("button", { name: "Send an enquiry" })).toBeVisible();
 });
 

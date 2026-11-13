@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useDemoAuth } from "@/components/auth/demo-auth";
-import { PropertyCard } from "@/components/properties/property-card";
-import { sampleProperties } from "@/app/(public)/properties/page";
+import { PropertyCard, toDemoPropertyCard } from "@/components/properties/property-card";
+import { getPublishedContributorProperties } from "@/data/demo-contributor-properties";
 import { demoEnquiries } from "@/data/demo-enquiries";
 
 export default function DashboardPage() {
   const { session, favoritePropertyIds } = useDemoAuth();
-  const savedHomes = sampleProperties.filter((property) => property.propertyId && favoritePropertyIds.includes(property.propertyId)).slice(0, 3);
+  const [records, setRecords] = useState<ReturnType<typeof getPublishedContributorProperties>>([]);
+  useEffect(() => { const frame = requestAnimationFrame(() => setRecords(getPublishedContributorProperties())); return () => cancelAnimationFrame(frame); }, []);
+  const savedHomes = records.map(toDemoPropertyCard).filter((property) => property.propertyId && favoritePropertyIds.includes(property.propertyId)).slice(0, 3);
 
   return (
     <main className="min-h-screen bg-cream px-6 py-10 sm:px-10 lg:px-12 lg:py-14">

@@ -20,7 +20,7 @@ const formatRent = (rent: number) => `KSh ${rent.toLocaleString("en-KE")}`;
 export default function ContributorPropertiesPage() {
   const { session } = useDemoAuth();
   const [properties, setProperties] = useState<ContributorProperty[]>(demoContributorProperties);
-  useEffect(() => { const frame = window.requestAnimationFrame(() => setProperties(getContributorProperties(session?.name))); return () => window.cancelAnimationFrame(frame); }, [session?.name]);
+  useEffect(() => { const frame = window.requestAnimationFrame(() => setProperties(getContributorProperties(session?.email, session?.name))); return () => window.cancelAnimationFrame(frame); }, [session?.email, session?.name]);
   const counts = {
     total: properties.length,
     approved: properties.filter((property) => property.status === "approved").length,

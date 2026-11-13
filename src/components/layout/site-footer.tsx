@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SupportContactLinks } from "@/components/contact/support-contact-links";
 
 type FooterItem = {
   label: string;
@@ -69,6 +70,7 @@ export function SiteFooter() {
                   <FooterItemLink key={item.label} item={item} />
                 ))}
               </nav>
+              {column.title === "Company" && <SupportContactLinks variant="footer" />}
             </div>
           ))}
         </div>

@@ -55,7 +55,7 @@ const sections = [
   {
     title: "Support and suspicious listings",
     paragraphs: [
-      "For help, use the customer-support channel made available in the platform. If a listing or interaction seems suspicious, stop communicating or paying until you can verify the situation and report it through the platform's available reporting or support channel.",
+      "For general assistance, check the Contact Us page for platform support channels currently configured. If a listing appears suspicious, use the reporting option on the relevant property page where available.",
     ],
   },
 ];

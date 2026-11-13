@@ -3,13 +3,13 @@ import { expect, test } from "@playwright/test";
 test("registered user can navigate favorites and settings", async ({ page }) => {
   await login(page, "demo.user@househunt.test", "DemoUser123!");
   await expect(page).toHaveURL(/\/dashboard$/);
-  await page.goto("/properties/bright-airy-apartment");
-  const save = page.getByRole("button", { name: "Remove Bright & airy 2-bedroom apartment from saved homes" }).first();
+  await page.goto("/properties/modern-westlands-home");
+  const save = page.getByRole("button", { name: "Remove Modern living in Westlands from saved homes" }).first();
   await save.click();
   await page.getByRole("dialog").getByRole("button", { name: "Remove", exact: true }).click();
   await expect(page.getByRole("status")).toContainText("removed from your saved homes");
   await page.goto("/dashboard/favorites");
-  await expect(page.getByText("Bright & airy 2-bedroom apartment")).toHaveCount(0);
+  await expect(page.getByText("Modern living in Westlands")).toHaveCount(0);
   await page.goto("/dashboard/enquiries");
   await expect(page.getByRole("heading", { name: "My Enquiries." })).toBeVisible();
   await page.goto("/dashboard/profile");

@@ -36,7 +36,7 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
       const stored = window.sessionStorage.getItem(STORAGE_KEY);
       if (stored) queueMicrotask(() => setSession(JSON.parse(stored) as DemoSession));
       const storedFavorites = window.sessionStorage.getItem(FAVORITES_KEY);
-      queueMicrotask(() => setFavoritePropertyIds(storedFavorites ? JSON.parse(storedFavorites) as string[] : ["bright-airy-apartment", "modern-westlands-home", "peaceful-city-retreat"]));
+      queueMicrotask(() => setFavoritePropertyIds(storedFavorites ? JSON.parse(storedFavorites) as string[] : ["modern-westlands-home", "peaceful-city-retreat", "quiet-modern-apartment"]));
     } catch {
       window.sessionStorage.removeItem(STORAGE_KEY);
     } finally {

@@ -9,8 +9,9 @@ export default function HelpPage() {
         <p className="mt-5 font-[family-name:var(--font-inter)] text-base leading-[1.7] text-charcoal">Start with the Rental Guide for practical steps on searching, viewing a home and checking details before payment.</p>
         <div className="mt-10 rounded-[12px] bg-white p-6 shadow-subtle sm:p-8">
           <h2 className="font-[family-name:var(--font-lora)] text-[28px] font-normal text-charcoal">Looking for something specific?</h2>
-          <p className="mt-3 font-[family-name:var(--font-inter)] text-sm leading-[1.7] text-grey">Use the platform support channel when it becomes available to ask a question or report a problem. House Hunting is still being prepared, so account and enquiry support options are not connected yet.</p>
+          <p className="mt-3 font-[family-name:var(--font-inter)] text-sm leading-[1.7] text-grey">Visit Contact Us to see the platform support channels currently configured. Any channel without contact details is shown as unavailable.</p>
           <Link href="/guide" className="mt-6 inline-flex rounded-md bg-black px-5 py-3 font-[family-name:var(--font-inter)] text-sm font-medium text-white hover:bg-charcoal">Read the Rental Guide</Link>
+          <Link href="/contact" className="ml-3 mt-6 inline-flex rounded-md border border-[#e5ded2] bg-white px-5 py-3 font-[family-name:var(--font-inter)] text-sm font-medium text-charcoal hover:bg-[#fbfaf7]">Contact Us</Link>
         </div>
       </div>
     </main>

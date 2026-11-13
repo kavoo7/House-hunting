@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SaveButton } from "@/components/favorites/save-button";
+import type { ContributorProperty } from "@/data/demo-contributor-properties";
 
 export type PropertyCardData = {
   image: string;
@@ -13,6 +14,23 @@ export type PropertyCardData = {
   status?: string;
   propertyId?: string;
 };
+
+export type DemoPropertyCardData = PropertyCardData & { monthlyRent: number };
+
+export function toDemoPropertyCard(property: ContributorProperty): DemoPropertyCardData {
+  return {
+    propertyId: property.publicPropertyId,
+    image: property.image,
+    status: property.availability,
+    price: `KSh ${property.monthlyRent.toLocaleString("en-KE")}`,
+    monthlyRent: property.monthlyRent,
+    title: property.title,
+    location: property.location,
+    bedrooms: property.bedrooms ?? 0,
+    bathrooms: property.bathrooms ?? 0,
+    size: property.area ? `${property.area} m²` : "Area not specified",
+  };
+}
 
 export function PropertyCard({ property }: { property: PropertyCardData }) {
   return (
